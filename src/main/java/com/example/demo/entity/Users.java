@@ -5,8 +5,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @AllArgsConstructor
@@ -14,7 +17,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name="users", schema = "public")
-public class Users {
+public class Users implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -47,6 +50,8 @@ public class Users {
             inverseJoinColumns = @JoinColumn(name="products_id"))
     private List<Products> favoriteProducts ;
 
+
+
     public void addFavoriteProduct(Products product) {
         if (favoriteProducts == null) {
             favoriteProducts = new ArrayList<>();
@@ -68,8 +73,15 @@ public class Users {
         basket.add(product);
     }
 
+    private List<Role> roles = new ArrayList<>();
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles;
+    }
 
-
-
+    @Override
+    public String getUsername() {
+        return "";
+    }
 }
