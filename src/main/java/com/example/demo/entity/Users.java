@@ -1,6 +1,5 @@
 package com.example.demo.entity;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,64 +15,63 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name="users", schema = "public")
+@Table(name = "users", schema = "public")
 public class Users implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name="user_name")
-    private String userName;
-
-    @Column(name="email")
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name="password")
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name="full_name")
+    @Column(name = "full_name")
     private String fullName;
 
-    @Column(name="phone_number")
+    @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name="adress")
+    @Column(name = "adress")
     private String adress;
 
-    @Column(name="role_id")
-    private long roleId;
+    @Column(name = "user_name", nullable = false, unique = true)
+    private String userName;
 
+    // Role ile ilişkili alan (ManyToMany)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST}, fetch = FetchType.EAGER)
-    @JoinTable(name = "products", schema = "public",
-            joinColumns = @JoinColumn(name = "user_id" ),
-            inverseJoinColumns = @JoinColumn(name="products_id"))
-    private List<Products> favoriteProducts ;
+    private List<Role> roles = new ArrayList<>();
 
+    // Favori ürünler (ManyToMany)
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST}, fetch = FetchType.LAZY)
+    @JoinTable(name = "favorites", schema = "public",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "products_id"))
 
+    private List<Products> favoriteProducts = new ArrayList<>();
 
     public void addFavoriteProduct(Products product) {
-        if (favoriteProducts == null) {
-            favoriteProducts = new ArrayList<>();
-        }
         favoriteProducts.add(product);
     }
 
-
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST}, fetch = FetchType.EAGER)
-    @JoinTable(name = "products", schema = "public",
-            joinColumns = @JoinColumn(name = "user_id" ),
-            inverseJoinColumns = @JoinColumn(name="products_id"))
-    private List<Products> basket ;
+    // Sepet (ManyToMany)
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST}, fetch = FetchType.LAZY)
+    @JoinTable(name = "basket", schema = "public",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "products_id"))
+    private List<Products> basket = new ArrayList<>();
 
     public void addToBasket(Products product) {
-        if (basket == null) {
-            basket = new ArrayList<>();
-        }
         basket.add(product);
     }
 
-    private List<Role> roles = new ArrayList<>();
+    // UserDetails implementasyonu
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -84,4 +82,6 @@ public class Users implements UserDetails {
     public String getUsername() {
         return "";
     }
+
+
 }

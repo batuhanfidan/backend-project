@@ -1,5 +1,7 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name="categoires", schema = "public")
+@Table(name="categories", schema = "public")
 public class Categories {
 
     @Id
@@ -26,7 +28,7 @@ public class Categories {
     @JoinTable(name = "categories_products", schema = "public",
             joinColumns = @JoinColumn(name = "categories_id" ),
             inverseJoinColumns = @JoinColumn(name="products_id"))
-
+    @JsonIgnoreProperties(value = "categories")
     private List<Products> products;
 
     public void addProduct(Products product) {

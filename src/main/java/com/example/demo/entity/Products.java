@@ -1,5 +1,7 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,9 +38,10 @@ public class Products {
 
     private List<Categories> categories;
 
-    public void addMovie(Categories category) {
-        if (categories == null){}
+    public void addCategories(Categories category) {
+        if (categories == null) {
             categories = new ArrayList<>();
-        categories.add(category);
+            categories.add(category);
+        }
     }
 }

@@ -44,11 +44,10 @@ public class UsersServiceImpl implements UsersService{
                 savedUser.getId(),
                 savedUser.getEmail(),
                 savedUser.getPassword(),
-                savedUser.getUserName(),
+                savedUser.getUsername(),
                 savedUser.getFullName(),
                 savedUser.getAdress(),
                 savedUser.getPhoneNumber(),
-                savedUser.getRoleId(),
                 savedUser.getFavoriteProducts(),
                 savedUser.getBasket()
         );
@@ -67,11 +66,10 @@ public class UsersServiceImpl implements UsersService{
 
         existingUser.setEmail(users.getEmail());
         existingUser.setPassword(users.getPassword());
-        existingUser.setUserName(users.getUserName());
+        existingUser.setUserName(users.getUsername());
         existingUser.setFullName(users.getFullName());
         existingUser.setAdress(users.getAdress());
         existingUser.setPhoneNumber(users.getPhoneNumber());
-        existingUser.setRoleId(users.getRoleId());
         existingUser.setFavoriteProducts(users.getFavoriteProducts());
         existingUser.setBasket(users.getBasket());
 
@@ -81,11 +79,10 @@ public class UsersServiceImpl implements UsersService{
                 updatedUser.getId(),
                 updatedUser.getEmail(),
                 updatedUser.getPassword(),
-                updatedUser.getUserName(),
+                updatedUser.getUsername(),
                 updatedUser.getFullName(),
                 updatedUser.getAdress(),
                 updatedUser.getPhoneNumber(),
-                updatedUser.getRoleId(),
                 updatedUser.getFavoriteProducts(),
                 updatedUser.getBasket()
         );

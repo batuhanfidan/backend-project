@@ -11,7 +11,7 @@ public interface ProductsService {
 
     Products findById(Long id);
 
-    ProductsResponse save(Products products);
+    ProductsResponse save(Products products, long id);
 
     ProductsResponse update(Long id, Products products);
 

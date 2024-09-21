@@ -14,16 +14,17 @@ import java.util.List;
 @RequestMapping("/categories")
 public class CategoriesController {
 
-    private CategoriesService categoriesService;
+    private final CategoriesService categoriesService;
 
     @Autowired
     public CategoriesController(CategoriesService categoriesService) {
         this.categoriesService = categoriesService;
     }
 
-    @GetMapping("/categories")
-    public String getCategories() {
-        return "List of categories"; // ya da HTML response
+    @GetMapping
+    public List<Categories> getCategories()
+    {
+        return categoriesService.findAll();
     }
 
 

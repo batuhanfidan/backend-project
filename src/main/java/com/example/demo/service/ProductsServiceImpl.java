@@ -1,7 +1,9 @@
 package com.example.demo.service;
 
+import com.example.demo.Repository.CategoriesRepository;
 import com.example.demo.Repository.ProductsRepository;
 import com.example.demo.dto.ProductsResponse;
+import com.example.demo.entity.Categories;
 import com.example.demo.entity.Products;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,10 +15,12 @@ import java.util.Optional;
 public class ProductsServiceImpl implements ProductsService {
 
     private final ProductsRepository productsRepository;
+    private final CategoriesService categoriesService;
 
     @Autowired
-    public ProductsServiceImpl(ProductsRepository productsRepository) {
+    public ProductsServiceImpl(ProductsRepository productsRepository,CategoriesService categoriesService) {
         this.productsRepository = productsRepository;
+        this.categoriesService = categoriesService;
     }
 
     @Override
@@ -30,16 +34,20 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     @Override
-    public ProductsResponse save(Products products) {
+    public ProductsResponse save(Products products, long id) {
 
-        Products savedProduct = productsRepository.save(products);
+        Categories categorie = categoriesService.findById(id);
+
+        products.addCategories(categorie);
+
+        productsRepository.save(products);
 
         return new ProductsResponse(
-                savedProduct.getId(),
-                savedProduct.getName(),
-                savedProduct.getPrice(),
-                savedProduct.getStock(),
-                savedProduct.getCategories()
+                products.getId(),
+                products.getName(),
+                products.getPrice(),
+                products.getStock(),
+                products.getCategories()
         );
     }
 

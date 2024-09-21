@@ -34,9 +34,9 @@ public class ProductsController {
         return ResponseEntity.ok(product);
     }
 
-    @PostMapping
-    public ResponseEntity<ProductsResponse> createProduct(@RequestBody Products products) {
-        ProductsResponse response = productsService.save(products);
+    @PostMapping("/{id}")
+    public ResponseEntity<ProductsResponse> createProduct(@RequestBody Products products, @PathVariable long id) {
+        ProductsResponse response = productsService.save(products, id);
         return ResponseEntity.ok(response);
     }
 
