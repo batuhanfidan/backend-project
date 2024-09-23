@@ -11,7 +11,13 @@ import java.util.Optional;
 @Service
 public class UsersServiceImpl implements UsersService{
 
-    private UsersRepository usersRepository;
+    private final UsersRepository usersRepository;
+
+    public UsersServiceImpl(UsersRepository usersRepository) {
+        this.usersRepository = usersRepository;
+    }
+
+
 
     @Override
     public List<Users> findAll() {

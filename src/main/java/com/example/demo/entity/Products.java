@@ -31,11 +31,11 @@ public class Products {
     private long stock;
 
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinTable(name = "categories_products", schema = "public",
-            joinColumns = @JoinColumn(name = "products_id" ),
+            joinColumns = @JoinColumn(name = "products_id"),
             inverseJoinColumns = @JoinColumn(name="categories_id"))
-
+    @JsonIgnoreProperties("products")
     private List<Categories> categories;
 
     public void addCategories(Categories category) {

@@ -37,23 +37,19 @@ public class CategoriesServiceImpl implements CategoriesService {
 
     @Override
     public CategoriesResponse update(Long id, Categories categories) {
-
-        Optional<Categories> existingCategoryOpt = categoriesRepository.findById(id);
-        if (existingCategoryOpt.isEmpty()) {
-            throw new RuntimeException("Category not found");
+        Categories existingCategory = categoriesRepository.findById(id).orElse(null);
+        if (existingCategory == null) {
+            return null; // Or handle this situation differently
         }
-
-        Categories existingCategory = existingCategoryOpt.get();
+        // Update the existing category's fields
         existingCategory.setName(categories.getName());
         existingCategory.setProducts(categories.getProducts());
 
+        // Save the updated category
         Categories updatedCategory = categoriesRepository.save(existingCategory);
 
-        return new CategoriesResponse(
-                updatedCategory.getId(),
-                updatedCategory.getName(),
-                updatedCategory.getProducts()
-        );
+        // Return a response DTO
+        return new CategoriesResponse(updatedCategory.getId(), updatedCategory.getName(), updatedCategory.getProducts());
     }
 
     @Override

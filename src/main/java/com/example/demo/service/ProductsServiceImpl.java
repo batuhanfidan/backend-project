@@ -5,6 +5,7 @@ import com.example.demo.Repository.ProductsRepository;
 import com.example.demo.dto.ProductsResponse;
 import com.example.demo.entity.Categories;
 import com.example.demo.entity.Products;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -77,7 +78,13 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     @Override
-    public void delete(Products products) {
-        productsRepository.delete(products);
+    @Transactional
+    public void delete(Products product) {
+        // Önce ürün-kategori ilişkisini kaldır
+        product.getCategories().forEach(category -> category.getProducts().remove(product));
+        product.getCategories().clear();
+
+        // Sonra ürünü sil
+        productsRepository.delete(product);
     }
 }

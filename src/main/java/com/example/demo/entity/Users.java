@@ -41,15 +41,15 @@ public class Users implements UserDetails {
     private String userName;
 
     // Role ile ilişkili alan (ManyToMany)
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-
     private List<Role> roles = new ArrayList<>();
 
+
     // Favori ürünler (ManyToMany)
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST}, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinTable(name = "favorites", schema = "public",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "products_id"))
@@ -61,11 +61,12 @@ public class Users implements UserDetails {
     }
 
     // Sepet (ManyToMany)
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST}, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     @JoinTable(name = "basket", schema = "public",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "products_id"))
     private List<Products> basket = new ArrayList<>();
+
 
     public void addToBasket(Products product) {
         basket.add(product);
@@ -80,7 +81,7 @@ public class Users implements UserDetails {
 
     @Override
     public String getUsername() {
-        return "";
+        return this.userName;
     }
 
 

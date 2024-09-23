@@ -24,7 +24,7 @@ public class Categories {
     @Enumerated(value = EnumType.STRING)
     private Categorie name;
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     @JoinTable(name = "categories_products", schema = "public",
             joinColumns = @JoinColumn(name = "categories_id" ),
             inverseJoinColumns = @JoinColumn(name="products_id"))
