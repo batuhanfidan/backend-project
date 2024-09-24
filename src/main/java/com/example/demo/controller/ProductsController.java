@@ -29,7 +29,7 @@ public class ProductsController {
     public ResponseEntity<Products> getProductById(@PathVariable Long id) {
         Products product = productsService.findById(id);
         if (product == null) {
-            return ResponseEntity.notFound().build();
+            throw new RuntimeException("product is not found with id:" + product);
         }
         return ResponseEntity.ok(product);
     }

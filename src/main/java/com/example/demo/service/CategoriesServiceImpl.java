@@ -4,7 +4,9 @@ import com.example.demo.Repository.CategoriesRepository;
 import com.example.demo.Repository.UsersRepository;
 import com.example.demo.dto.CategoriesResponse;
 import com.example.demo.entity.Categories;
+import com.example.demo.exceptions.ApiException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +15,7 @@ import java.util.Optional;
 @Service
 public class CategoriesServiceImpl implements CategoriesService {
 
-    private CategoriesRepository categoriesRepository;
+    private final CategoriesRepository categoriesRepository;
 
     @Autowired
     public CategoriesServiceImpl(CategoriesRepository categoriesRepository) {
@@ -27,7 +29,7 @@ public class CategoriesServiceImpl implements CategoriesService {
 
     @Override
     public Categories findById(Long id) {
-        return categoriesRepository.findById(id).orElse(null);
+        return categoriesRepository.findById(id).orElseThrow(() -> new ApiException("Categories is not found with id: " + id, HttpStatus.NOT_FOUND));
     }
 
     @Override
@@ -37,18 +39,15 @@ public class CategoriesServiceImpl implements CategoriesService {
 
     @Override
     public CategoriesResponse update(Long id, Categories categories) {
-        Categories existingCategory = categoriesRepository.findById(id).orElse(null);
+        Categories existingCategory = categoriesRepository.findById(id).orElseThrow(() -> new ApiException("Categorie is not exist with given id:" + id, HttpStatus.NOT_FOUND));
         if (existingCategory == null) {
-            return null; // Or handle this situation differently
+            return null;
         }
-        // Update the existing category's fields
         existingCategory.setName(categories.getName());
         existingCategory.setProducts(categories.getProducts());
 
-        // Save the updated category
         Categories updatedCategory = categoriesRepository.save(existingCategory);
 
-        // Return a response DTO
         return new CategoriesResponse(updatedCategory.getId(), updatedCategory.getName(), updatedCategory.getProducts());
     }
 

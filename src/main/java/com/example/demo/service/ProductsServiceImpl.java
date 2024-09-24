@@ -5,8 +5,10 @@ import com.example.demo.Repository.ProductsRepository;
 import com.example.demo.dto.ProductsResponse;
 import com.example.demo.entity.Categories;
 import com.example.demo.entity.Products;
+import com.example.demo.exceptions.ApiException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,7 +33,7 @@ public class ProductsServiceImpl implements ProductsService {
 
     @Override
     public Products findById(Long id) {
-        return productsRepository.findById(id).orElse(null);
+        return productsRepository.findById(id).orElseThrow(() -> new ApiException("Product is not found with id: " + id, HttpStatus.NOT_FOUND));
     }
 
     @Override
@@ -57,7 +59,7 @@ public class ProductsServiceImpl implements ProductsService {
 
         Optional<Products> existingProductOpt = productsRepository.findById(id);
         if (existingProductOpt.isEmpty()) {
-            throw new RuntimeException("Product not found");
+            throw new ApiException("Product not found", HttpStatus.NOT_FOUND);
         }
 
         Products existingProduct = existingProductOpt.get();
@@ -80,11 +82,10 @@ public class ProductsServiceImpl implements ProductsService {
     @Override
     @Transactional
     public void delete(Products product) {
-        // Önce ürün-kategori ilişkisini kaldır
         product.getCategories().forEach(category -> category.getProducts().remove(product));
+
         product.getCategories().clear();
 
-        // Sonra ürünü sil
         productsRepository.delete(product);
     }
 }

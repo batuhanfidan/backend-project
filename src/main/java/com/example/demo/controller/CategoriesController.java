@@ -32,7 +32,7 @@ public class CategoriesController {
     public ResponseEntity<Categories> getCategoryById(@PathVariable Long id) {
         Categories category = categoriesService.findById(id);
         if (category == null) {
-            return ResponseEntity.notFound().build();
+            throw new RuntimeException("categories is not found with id:" + category);
         }
         return ResponseEntity.ok(category);
     }

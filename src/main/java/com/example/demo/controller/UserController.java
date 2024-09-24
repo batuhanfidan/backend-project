@@ -29,7 +29,7 @@ public class UserController {
     public ResponseEntity<Users> getUserById(@PathVariable Long id) {
         Users user = usersService.findById(id);
         if (user == null) {
-            return ResponseEntity.notFound().build();
+            throw new RuntimeException("user is not found with id:" + user);
         }
         return ResponseEntity.ok(user);
     }

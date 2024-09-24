@@ -3,6 +3,8 @@ package com.example.demo.service;
 import com.example.demo.Repository.UsersRepository;
 import com.example.demo.dto.UsersResponse;
 import com.example.demo.entity.Users;
+import com.example.demo.exceptions.ApiException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +31,7 @@ public class UsersServiceImpl implements UsersService{
     @Override
     public Users findById(Long id) {
 
-        return usersRepository.findById(id).orElse(null);
+        return usersRepository.findById(id).orElseThrow(() -> new ApiException("User is not found with id: " + id, HttpStatus.NOT_FOUND));
 
     }
 
@@ -42,7 +44,7 @@ public class UsersServiceImpl implements UsersService{
 
         Optional<Users> existingUser = usersRepository.findById(users.getId());
         if (existingUser.isPresent()) {
-            throw new RuntimeException("This user is already registered");
+            throw new ApiException("This user is already registered", HttpStatus.ALREADY_REPORTED);
         }
 
         Users savedUser = usersRepository.save(users);
@@ -65,7 +67,7 @@ public class UsersServiceImpl implements UsersService{
         Optional<Users> existingUserOpt = usersRepository.findById(id);
 
         if (existingUserOpt.isEmpty()) {
-            throw new RuntimeException("User not found");
+            throw new ApiException("User not found", HttpStatus.NOT_FOUND);
         }
 
         Users existingUser = existingUserOpt.get();
