@@ -73,11 +73,10 @@ public class SecurityConfig {
                     auth.requestMatchers(HttpMethod.PUT, "/users/**").hasAuthority("ADMIN");
                     auth.requestMatchers(HttpMethod.DELETE, "/users/**").hasAuthority("ADMIN");
 
-                    // Any other request must be authenticated
                     auth.anyRequest().permitAll();
                 })
-                .formLogin(Customizer.withDefaults()) // Enable form-based login
-                .httpBasic(Customizer.withDefaults()) // Enable basic authentication
+                .formLogin(Customizer.withDefaults())
+                .httpBasic(Customizer.withDefaults())
                 .build();
     }
 }
