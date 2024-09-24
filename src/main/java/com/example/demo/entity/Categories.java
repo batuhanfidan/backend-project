@@ -31,6 +31,8 @@ public class Categories {
     @JsonIgnoreProperties(value = "categories")
     private List<Products> products;
 
+
+
     public void addProduct(Products product) {
         if (products == null) {
             products = new ArrayList<>();

@@ -4,7 +4,10 @@ import com.example.demo.Repository.UsersRepository;
 import com.example.demo.dto.UsersResponse;
 import com.example.demo.entity.Users;
 import com.example.demo.exceptions.ApiException;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,26 +16,23 @@ import java.util.Optional;
 @Service
 public class UsersServiceImpl implements UsersService{
 
+    private final PasswordEncoder passwordEncoder;
+
     private final UsersRepository usersRepository;
 
-    public UsersServiceImpl(UsersRepository usersRepository) {
+    public UsersServiceImpl(UsersRepository usersRepository,PasswordEncoder passwordEncoder) {
         this.usersRepository = usersRepository;
+        this.passwordEncoder = passwordEncoder;
     }
-
-
 
     @Override
     public List<Users> findAll() {
-
         return usersRepository.findAll();
-
     }
 
     @Override
     public Users findById(Long id) {
-
         return usersRepository.findById(id).orElseThrow(() -> new ApiException("User is not found with id: " + id, HttpStatus.NOT_FOUND));
-
     }
 
     @Override
@@ -47,11 +47,14 @@ public class UsersServiceImpl implements UsersService{
             throw new ApiException("This user is already registered", HttpStatus.ALREADY_REPORTED);
         }
 
+        String encodedPassword = passwordEncoder.encode(users.getPassword());
+
+        users.setPassword(encodedPassword);
+
         Users savedUser = usersRepository.save(users);
         return new UsersResponse(
                 savedUser.getId(),
                 savedUser.getEmail(),
-                savedUser.getPassword(),
                 savedUser.getUsername(),
                 savedUser.getFullName(),
                 savedUser.getAdress(),
@@ -86,7 +89,6 @@ public class UsersServiceImpl implements UsersService{
         return new UsersResponse(
                 updatedUser.getId(),
                 updatedUser.getEmail(),
-                updatedUser.getPassword(),
                 updatedUser.getUsername(),
                 updatedUser.getFullName(),
                 updatedUser.getAdress(),

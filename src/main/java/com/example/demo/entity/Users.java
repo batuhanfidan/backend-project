@@ -56,6 +56,8 @@ public class Users implements UserDetails {
 
     private List<Products> favoriteProducts = new ArrayList<>();
 
+
+
     public void addFavoriteProduct(Products product) {
         favoriteProducts.add(product);
     }
@@ -72,7 +74,6 @@ public class Users implements UserDetails {
         basket.add(product);
     }
 
-    // UserDetails implementasyonu
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
