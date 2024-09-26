@@ -40,7 +40,7 @@ public class Users implements UserDetails {
     @Column(name = "user_name", nullable = false, unique = true)
     private String userName;
 
-    // Role ile ilişkili alan (ManyToMany)
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),

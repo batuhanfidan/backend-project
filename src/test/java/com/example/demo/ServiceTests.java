@@ -48,7 +48,7 @@ public class ServiceTests {
     @Mock
     private UsersRepository usersRepository;
 
-    // CategoriesService Test
+
     @Test
     public void testFindCategoryById() {
         Categories category = new Categories(1L, Categorie.SMART, null);
@@ -59,7 +59,7 @@ public class ServiceTests {
         assertEquals(Categorie.SMART, foundCategory.getName());
     }
 
-    // ProductsService Test
+
     @Test
     public void testFindProductById() {
         Products product = new Products(1L, "Test Product", 100, 10, null);
@@ -70,7 +70,7 @@ public class ServiceTests {
         assertEquals("Test Product", foundProduct.getName());
     }
 
-    // UsersService Test
+
     @Test
     public void testFindUserById() {
         Users user = new Users();

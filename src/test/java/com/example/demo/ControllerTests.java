@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.User;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,8 +36,7 @@ class ControllerTests {
     @Mock
     private UsersService usersService;
 
-    @Mock
-    private UsersResponse usersResponse;
+
 
     @InjectMocks
     private CategoriesController categoriesController;
@@ -52,7 +52,7 @@ class ControllerTests {
 
     @Test
     void testCategoriesController() {
-        // Arrange
+
         List<Categories> expectedCategories = new ArrayList<>();
 
         Categories category1 = new Categories();
@@ -67,40 +67,36 @@ class ControllerTests {
 
         when(categoriesService.findAll()).thenReturn(expectedCategories);
 
-        // Act
         List<Categories> actualCategories = categoriesController.getCategories();
 
-        // Assert
         assertEquals(expectedCategories, actualCategories);
         verify(categoriesService, times(1)).findAll();
     }
 
     @Test
     void testProductsController() {
-        // Arrange
+
         Long productId = 1L;
         Products expectedProduct = new Products();
         expectedProduct.setId(productId);
         expectedProduct.setName("TEST");
-        // Assuming Products has a 'quantity' field
-        expectedProduct.setQuantity(10);
-        // Assuming Products has a 'categoryId' field
-        expectedProduct.setCategoryId(1L);
+        expectedProduct.setPrice(100);
+        expectedProduct.setStock(10);
 
+        Categories category = new Categories();
+        category.setId(1L);
+        category.setName(Categorie.ELECTRONICS);
         when(productsService.findById(productId)).thenReturn(expectedProduct);
-
-        // Act
         ResponseEntity<Products> response = productsController.getProductById(productId);
-
-        // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedProduct, response.getBody());
         verify(productsService, times(1)).findById(productId);
     }
 
+
     @Test
     void testUserController() {
-        // Arrange
+
         Users newUser = new Users();
         newUser.setEmail("newuser@example.com");
         newUser.setPassword("password");
@@ -109,29 +105,33 @@ class ControllerTests {
         newUser.setAdress("123 Test St");
         newUser.setUserName("newuser");
 
-        // Optionally set empty lists for roles, favoriteProducts, and basket
+
         newUser.setRoles(new ArrayList<>());
         newUser.setFavoriteProducts(new ArrayList<>());
         newUser.setBasket(new ArrayList<>());
 
-        UsersResponse savedUserResponse = usersResponse;
-        savedUserResponse.setId(1L);
-        savedUserResponse.setEmail("newuser@example.com");
-        savedUserResponse.setPassword("password");
-        savedUserResponse.setFullName("New User");
-        savedUserResponse.setPhoneNumber("1234567890");
-        savedUserResponse.setAdress("123 Test St");
-        savedUserResponse.setUserName("newuser");
+
+        UsersResponse savedUserResponse = new UsersResponse(
+                1L,
+                "newuser",
+                "newuser@example.com",
+                "New User",
+                "1234567890",
+                "123 Test St",
+                new ArrayList<>(),
+                new ArrayList<>()
+        );
 
         when(usersService.save(any(Users.class))).thenReturn(savedUserResponse);
 
-        // Act
         ResponseEntity<UsersResponse> response = userController.createUser(newUser);
 
-        // Assert
+
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(savedUserResponse, response.getBody());
         verify(usersService, times(1)).save(newUser);
     }
+
+
 
 }

@@ -38,23 +38,23 @@ class RepositoryTests {
 
     @Test
     void testCategoriesRepository() {
-        // Arrange
+
         Categories category = new Categories();
         category.setName(Categorie.SMART);
         entityManager.persist(category);
         entityManager.flush();
 
-        // Act
+
         Optional<Categories> foundCategory = categoriesRepository.findById(category.getId());
 
-        // Assert
+
         assertTrue(foundCategory.isPresent());
         assertEquals(Categorie.SMART, foundCategory.get().getName());
     }
 
     @Test
     void testProductsRepository() {
-        // Arrange
+
         Products product = new Products();
         product.setName("Test Product");
         product.setPrice(10);
@@ -62,31 +62,30 @@ class RepositoryTests {
         entityManager.persist(product);
         entityManager.flush();
 
-        // Act
+
         List<Products> allProducts = productsRepository.findAll();
 
-        // Assert
         assertFalse(allProducts.isEmpty());
         assertTrue(allProducts.stream().anyMatch(p -> p.getName().equals("Test Product")));
     }
 
     @Test
     void testUsersRepository() {
-        // Arrange
+
         Users user = new Users();
         user.setEmail("test@example.com");
         user.setPassword("password");
         user.setUserName("TestUser");
         user.setFullName("Test User");
         user.setPhoneNumber("1234567890");
-        user.setAdress("123 Test Street, Test City, 12345"); // Adres eklendi
+        user.setAdress("123 Test Street, Test City, 12345");
         entityManager.persist(user);
         entityManager.flush();
 
-        // Act
+
         Optional<Users> foundUser = usersRepository.findById(user.getId());
 
-        // Assert
+
         assertTrue(foundUser.isPresent());
         assertEquals("test@example.com", foundUser.get().getEmail());
         assertEquals("Test User", foundUser.get().getFullName());
